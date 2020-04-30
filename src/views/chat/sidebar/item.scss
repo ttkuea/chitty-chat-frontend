@@ -1,0 +1,21 @@
+.item {
+    height: 48px;
+    display: grid;
+    grid-template-columns: min-content 1fr min-content;
+    background-color: #FFFFFF;
+    align-items: center;
+
+    .image {
+        padding: 6px;
+        > img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    }
+
+    .name {
+        font-size: 24px;
+    }
+}
