@@ -1,0 +1,59 @@
+.chat-room {
+    height: 100%;
+    max-height: 100%;
+    background-color: #ffffff;
+    display: grid;
+    grid-template-rows: 80px minmax(0, 1fr) auto;
+
+    .title {
+        height: 80px;
+
+        .group-title {
+            line-height: 80px;
+            font-size: 28px;
+            background-color: #a3d1d3;
+            color: #ffffff;
+            text-align: center;
+            vertical-align: middle;
+        }
+    }
+
+    .chat {
+        height: 100%;
+        background-color: green;
+        overflow: auto;
+    }
+
+    .chat-box {
+        display: flex;
+        flex-direction: row;
+        
+        .input {
+            flex: 1;
+            padding: 16px 0 16px 16px;
+            &:empty::before {
+                content: attr(placeholder);
+                color: #c5b2bd;
+            }
+        }
+
+        .send {
+            cursor: pointer;
+            width: 48px;
+            // padding: 16px;
+            flex: 0 0 auto;
+            align-self: center;
+            
+            > button {
+                border: none;
+                font-size: 24px;
+                background-color: transparent;
+                cursor: pointer;
+            }
+        }
+    }
+
+    .test {
+        
+    }
+}
