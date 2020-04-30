@@ -1,6 +1,6 @@
 import React from 'react';
 import Item from './item';
-import LogoutIcon from './images/logout-icon.svg';
+import LogoutIcon from '../images/logout-icon.svg';
 
 const UserItem = ({user}) => {
     const {name, image} = user;

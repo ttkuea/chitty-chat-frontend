@@ -1,7 +1,7 @@
 import React from 'react';
-import Section from './section';
-import UserItem from './user-item';
-import GroupItem from './group-item';
+import Section from './components/section';
+import UserItem from './components/user-item';
+import GroupItem from './components/group-item';
 
 import JoinIcon from './images/join-icon.svg';
 import AddIcon from './images/add-icon.svg';
