@@ -1,0 +1,37 @@
+.chat-bubble {
+    display: flex;
+    flex-direction: row;
+    margin: 16px 16px;
+
+    &.own {
+        flex-direction: row-reverse;
+    }
+
+
+    .avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .message {
+        margin-left: 8px;
+        
+        .sender {
+            margin-bottom: 8px;
+        }
+        
+        .text {
+            padding: 12px;
+            border-radius: 16px;
+            background-color: #f1f5f5;
+            color: black;
+        }
+    }
+
+    .timestamp {
+        margin-left: 8px;
+        align-self: flex-end;
+    }
+}

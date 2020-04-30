@@ -5,6 +5,7 @@ import GroupItem from './components/group-item';
 
 import JoinIcon from './images/join-icon.svg';
 import AddIcon from './images/add-icon.svg';
+import LogoutIcon from './images/logout-icon.svg';
 
 const Sidebar = ({groups, profile}) => {
     const yourGroups = groups.filter(g => g.join);
@@ -20,7 +21,9 @@ const Sidebar = ({groups, profile}) => {
             }>
                 { 
                     yourGroups.map(g => {
-                        return <GroupItem group={g}/>;
+                        return <GroupItem group={g}
+                            action={ <img src={LogoutIcon} className="icon"/> }
+                        />;
                     })
                 }
             </Section>
