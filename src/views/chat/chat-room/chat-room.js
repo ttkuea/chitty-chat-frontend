@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ChatBubble from './components/chat-bubble';
 import UnreadMarker from './components/unread-marker';
 
-import { store, socket } from '../store/store.js';
+import { store, socket } from '../../../store/store.js';
 
 const fakeMessage = {
     message: "doge doge",
