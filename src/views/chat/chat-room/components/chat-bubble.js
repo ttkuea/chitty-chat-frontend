@@ -12,7 +12,7 @@ const ChatBubble = ({
     const className = isOwn ? "chat-bubble own" : "chat-bubble";
     return (
         <div className={className}>
-            { !isOwn && <img src="https://i.pravatar.cc/48" className="avatar"/> }
+            { !isOwn && <img src={"https://ui-avatars.com/api/?name=" + sender} className="avatar"/> }
             <div className="message">
                 { !isOwn && <div className="sender"> {sender} </div> }
                 <div className="text"> {message} </div>
