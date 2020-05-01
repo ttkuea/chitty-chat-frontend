@@ -29,14 +29,29 @@ const fakeProfile = {
 
 const Chat = () => {
     const { state, dispatch } = useContext(store);
-    let socket;
+    let gsocket; // fetch group information for side bar
 
     useEffect(() => {
-        socket = socketIOClient(state.endpoint)
+        gsocket = socketIOClient(state.endpoint);
+        dispatch({
+            type: 'set',
+            newState: {
+                gsocket: gsocket
+            }
+        });
+        
+        gsocket.emit('client_init', {role: 'g'});
+        gsocket.on('server_emitGroups', (res) => {
+            console.log(res);
+        });
         return function cleanup() {
-            
-        };   
-    });
+            gsocket.removeAllListeners();
+        };
+    }, []);
+
+    const onChange = (groups) => {
+        dispatch({type:'update_group', groups: groups});
+    }
 
     return (
         <div className="chat-page-layout">

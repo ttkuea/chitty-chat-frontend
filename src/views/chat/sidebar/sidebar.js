@@ -11,6 +11,7 @@ const Sidebar = ({groups, profile}) => {
     const yourGroups = groups.filter(g => g.join);
     const otherGroups = groups.filter(g => !g.join);
 
+
     return (
         <div className="chat-sidebar">
             <Section name="your profile">
