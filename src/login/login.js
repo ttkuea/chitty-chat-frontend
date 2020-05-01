@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
+import { store } from '../store/store.js'
 // import config from '../config';
 
 const LoginPageStyle = styled.div`
@@ -99,6 +100,8 @@ export const SubmitButton = ({ action, text }) => {
   );
 };
 const LoginPage = () => {
+  const { state, dispatch } = useContext(store);
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const updateUserName = (value) => {
@@ -112,6 +115,17 @@ const LoginPage = () => {
   const submit = () => {
     alert(`submit\n username:${username}\n password:${password}`);
   };
+  // template by flap edit it
+  const onLogin = async () => {
+    const username = 'testusername';
+
+    await dispatch({ type: "login", payload: username });
+    
+    // delete when not use this teach you how to get value
+    //check login 
+    // const isLogin = !(state.loginUsername == null)
+  }
+
   return (
     <LoginPageStyle>
       <div className='loginBox'>
@@ -133,7 +147,7 @@ const LoginPage = () => {
           callback={updatePassword}
         />
 
-        <SubmitButton text='LOGIN' action={submit}></SubmitButton>
+        <SubmitButton text='LOGIN' action={onsubmit} ></SubmitButton>
         <div className='d-flex justify-content-center'>
           <p>
             don’t have any account ?

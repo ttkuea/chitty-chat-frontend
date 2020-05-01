@@ -29,7 +29,6 @@ const fakeProfile = {
 
 const Chat = () => {
     const { state, dispatch } = useContext(store);
-
     let socket;
 
     useEffect(() => {
