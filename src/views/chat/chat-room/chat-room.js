@@ -102,7 +102,7 @@ const ChatRoom = ({groups, groupName, onMessage}) => {
                         {
                             m._id && unreadId == m._id && <UnreadMarker/>
                         }
-                        <ChatBubble message={m}/>
+                        <ChatBubble message={m} isOwn={m.sender == state.loginUsername}/>
                     </>
                 })}
             </div>
