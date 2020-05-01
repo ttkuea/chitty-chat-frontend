@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext, useState, useRef } from 'react';
 import './chat.scss';
 import Sidebar from './sidebar/sidebar';
 import ChatRoom from './chat-room/chat-room';
@@ -25,13 +25,17 @@ const fakeGroups = [
 
 const Chat = () => {
     const { state, dispatch } = useContext(store);
-    const [groups, setGroups] = useState([]);
+    const [groups, setGroups] = useState({});
     const [curGroupName, setCurGroupName] = useState();
-    
     useEffect(() => {
         socket.emit('client_getGroupInfo');
         socket.on('server_emitGroupInfo', (res) => {
-            setGroups(res);
+            // convert to map
+            const newGroup = {};
+            res.forEach(group => {
+                newGroup[group.groupName] = group;
+            })
+            setGroups(newGroup);
         });
         return () => {
             socket.off('server_emitGroupInfo');
@@ -45,7 +49,6 @@ const Chat = () => {
     };
 
     const enterGroup_cb = (groupName) => {
-        console.log("fron end click enter group: ", groupName);
         setCurGroupName(groupName);
 
         // exit old group
@@ -53,6 +56,22 @@ const Chat = () => {
         socket.emit('client_enterGroup', { groupName: groupName, username: state.loginUsername });
         
     };
+    
+    function onMessage(event) {
+        const {groupName, message} = event;
+        const thisState = groups;
+        const newState = {
+            ...thisState,
+        };
+        newState[groupName] = {
+            ...thisState[groupName],
+            messages: [
+                ...thisState[groupName].messages,
+                message,
+            ]
+        };
+        setGroups(newState);
+    }
 
     return (
         <div className="chat-page-layout">
@@ -61,7 +80,7 @@ const Chat = () => {
                     <Sidebar groups={groups} profile={getProfile} callback={enterGroup_cb}/>
                 </div>
                 <div className="main">
-                    {curGroupName && <ChatRoom groupName={curGroupName}/>}
+                    {curGroupName && <ChatRoom groups={groups} groupName={curGroupName} onMessage={onMessage}/>}
                 </div>
             </div>
         </div>

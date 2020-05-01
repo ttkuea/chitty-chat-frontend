@@ -17,8 +17,9 @@ const Sidebar = ({groups, profile, callback, exitcallback}) => {
     const createGroupInfo = (groups) => {
         const yourGroups = [];
         const otherGroups = [];
-        console.log('creae group info', groups)
-        groups.forEach(g => {
+        // console.log('creae group info', groups)
+        // `groups` is map
+        Object.values(groups).forEach(g => {
             const memberIds = g.members.map(member => member.userId);
             if (memberIds.includes(state.loginId)) {
                 yourGroups.push({...g});
@@ -46,7 +47,7 @@ const Sidebar = ({groups, profile, callback, exitcallback}) => {
                     <Section name="groups">
                         {
                             otherGroups.map(g => {
-                                return <GroupItem group={g} callback={() => handleEnterGroup(g.groupName)}
+                                return <GroupItem group={g} callback={() => alert("Please join group to view message")}
                                     action={<img src={JoinIcon} className="icon" onClick={() => handleJoinGroup(g.groupName)} />}
                                 />
                             })

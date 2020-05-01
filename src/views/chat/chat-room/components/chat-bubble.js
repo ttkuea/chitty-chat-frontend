@@ -3,7 +3,7 @@ import './chat-bubble.scss';
 
 const ChatBubble = ({
     message: {
-        username,
+        sender,
         message,
         timestamp,
     },
@@ -14,10 +14,10 @@ const ChatBubble = ({
         <div className={className}>
             { !isOwn && <img src="https://i.pravatar.cc/48" className="avatar"/> }
             <div className="message">
-                { !isOwn && <div className="sender"> name </div> }
-                <div className="text"> message </div>
+                { !isOwn && <div className="sender"> {sender} </div> }
+                <div className="text"> {message} </div>
             </div>
-            <div className="timestamp"> time </div>
+            <div className="timestamp"> {new Date(timestamp).toISOString()} </div>
         </div>
     )
 }

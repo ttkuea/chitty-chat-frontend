@@ -14,21 +14,23 @@ const { Provider } = store;
 
 const StateProvider = ( { children } ) => {
     const [state, dispatch] = useReducer((state, action) => {
+    let newState;
         switch(action.type) {
             case 'set':
                 console.log('set', action.newState)
-                const newState = {
+                newState = {
                     ...state,
                     ...clone(action.newState)
                 };
                 return newState;
             case 'setGroup':
-                return {
+                newState = {
                     ...state,
                     ...clone(action.groups)
-                }
+                };
+                return newState;
          	case 'login':
-        		return {
+        		newState = {
           			...state,
                       loginUsername: action.loginUsername,
                       loginId: action.loginId
