@@ -47,7 +47,7 @@ const Sidebar = ({groups, profile, callback}) => {
                     <Section name="groups">
                         {
                             otherGroups.map(g => {
-                                return <GroupItem group={g} callback={() => handleEnterGroup(g.groupName)}
+                                return <GroupItem group={g} callback={() => alert("Please join group to view message")}
                                     action={<img src={JoinIcon} className="icon" onClick={() => handleJoinGroup(g.groupName)} />}
                                 />
                             })
