@@ -14,19 +14,29 @@ const fakeMessage = {
     timestamp: "2019-12-31T00:11:22Z"
 };
 
-const ChatRoom = ({groups, groupName}) => {
+const ChatRoom = ({ groupName}) => {
     const { state, dispatch } = useContext(store);
     const [unread, setUnread] = useState([]);
     const [read, setRead] = useState([]);
+    const [curGroup, setCurGroup] = useState(null);
+
     const inputEl = useRef(null);
 
     useEffect(() => {
-        socket.emit('client_enterGroup', {groupName: groupName});
-        // socket.on('server_emitChat', (res) => {
-        // });
+    //     
+        // get all previos message
+        socket.on('server_emitOnEnterGroup', (res) => {
+            setCurGroup(res);
+            console.log('group messages with username', res);
+        });
+
+        socket.on('server_emitChat', (res) => {
+            console.log(res);
+        });
         return () => {
-            // socket.off('server_emitChat');
-            socket.emit('client_leaveGroup', {groupName: groupName});
+            socket.off('server_emitChat');
+            socket.off('server_emitOnEnterGroup');
+            socket.emit('client_leaveGroup', {groupName: groupName, username:state.loginUsername});
         };
     }, []);
 
@@ -41,7 +51,7 @@ const ChatRoom = ({groups, groupName}) => {
     }
 
     const createChat = () => {
-        const group = groups.filter(g => g.groupName == groupName)[0];
+        
     }
 
     return (

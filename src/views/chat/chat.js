@@ -27,6 +27,7 @@ const Chat = () => {
     const { state, dispatch } = useContext(store);
     const [groups, setGroups] = useState([]);
     const [curGroupName, setCurGroupName] = useState();
+    
     useEffect(() => {
         socket.emit('client_getGroupInfo');
         socket.on('server_emitGroupInfo', (res) => {
@@ -46,6 +47,11 @@ const Chat = () => {
     const enterGroup_cb = (groupName) => {
         console.log("fron end click enter group: ", groupName);
         setCurGroupName(groupName);
+
+        // exit old group
+        curGroupName && socket.emit('client_leaveGroup', { groupName: curGroupName, username: state.loginUsername });
+        socket.emit('client_enterGroup', { groupName: groupName, username: state.loginUsername });
+        
     };
 
     return (
@@ -55,7 +61,7 @@ const Chat = () => {
                     <Sidebar groups={groups} profile={getProfile} callback={enterGroup_cb}/>
                 </div>
                 <div className="main">
-                    {curGroupName && <ChatRoom groups={groups} groupName={curGroupName}/>}
+                    {curGroupName && <ChatRoom groupName={curGroupName}/>}
                 </div>
             </div>
         </div>
