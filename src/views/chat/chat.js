@@ -25,21 +25,6 @@ const fakeGroups = [
 
 const Chat = () => {
     const { state, dispatch } = useContext(store);
-    
-    useEffect(() => {
-        socket.emit('client_getGroupInfo');
-        socket.on('server_emitGroupInfo', (res) => {
-            dispatch({ type:'set',
-            
-                newState: { groups: res }
-            })
-            console.log('state', state.groups);
-        });
-        return () => {
-            socket.off('server_emitGroupInfo');
-            socket.emit('client_exitGroupInfo');
-        };
-    }, []);
 
     const getProfile = {
         name: state.loginUsername,
