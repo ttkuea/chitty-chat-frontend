@@ -14,24 +14,40 @@ const { Provider } = store;
 
 const StateProvider = ( { children } ) => {
     const [state, dispatch] = useReducer((state, action) => {
+    let newState;
         switch(action.type) {
             case 'set':
                 console.log('set', action.newState)
-                const newState = {
+                newState = {
                     ...state,
                     ...clone(action.newState)
                 };
+                console.log("new state", newState);
                 return newState;
             case 'setGroup':
-                return {
+                newState = {
                     ...state,
                     ...clone(action.groups)
-                }
+                };
+                console.log("new state", newState);
+                return newState;
          	case 'login':
-        		return {
+        		newState = {
           			...state,
           			loginUsername: action.loginUsername,
-        		};
+                };
+                console.log("new state", newState);
+                return newState;
+            case 'newMessage':
+                const {groupName, message} = action.payload;
+                // newState = {
+                //     ...state,
+                //     [groupName]: {
+                //         ...state.
+                //     }
+                // }
+                console.log("new state", newState);
+                return newState;
             default:
                 throw new Error();
         ;}

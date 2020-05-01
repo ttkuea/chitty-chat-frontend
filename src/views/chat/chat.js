@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext, useState, useRef } from 'react';
 import './chat.scss';
 import Sidebar from './sidebar/sidebar';
 import ChatRoom from './chat-room/chat-room';
@@ -25,13 +25,19 @@ const fakeGroups = [
 
 const Chat = () => {
     const { state, dispatch } = useContext(store);
-    const [groups, setGroups] = useState([]);
+    const [groups, setGroups] = useState({});
     const [curGroupName, setCurGroupName] = useState();
-    
+    console.log("Chat state is", groups);
     useEffect(() => {
+        console.log("chat effect");
         socket.emit('client_getGroupInfo');
         socket.on('server_emitGroupInfo', (res) => {
-            setGroups(res);
+            // convert to map
+            const newGroup = {};
+            res.forEach(group => {
+                newGroup[group.groupName] = group;
+            })
+            setGroups(newGroup);
         });
         return () => {
             socket.off('server_emitGroupInfo');
@@ -53,6 +59,32 @@ const Chat = () => {
         socket.emit('client_enterGroup', { groupName: groupName, username: state.loginUsername });
         
     };
+    
+    const hackState = useRef(groups);
+
+    function onMessage(event) {
+        const {groupName, message} = event;
+        const thisState = {...groups, ...hackState.current};
+        console.log("[update] current state is", thisState);
+        // console.log("recv message from channel", event.groupName);
+        // console.log("message was", groups[groupName].messages)
+        // console.log("this group had %d message", groups[groupName].messages.length);
+        const newState = {
+            ...thisState,
+        };
+        newState[groupName] = {
+            ...thisState[groupName],
+            messages: [
+                ...thisState[groupName].messages,
+                message,
+            ]
+        };
+        // console.log("this group now has %d message", groups[groupName].messages.length)
+        // console.log("message would become", newState[groupName].messages);
+        console.log("[update] new state", newState)
+        hackState.current = newState;
+        setGroups(newState);
+    }
 
     return (
         <div className="chat-page-layout">
@@ -61,7 +93,7 @@ const Chat = () => {
                     <Sidebar groups={groups} profile={getProfile} callback={enterGroup_cb}/>
                 </div>
                 <div className="main">
-                    {curGroupName && <ChatRoom groupName={curGroupName}/>}
+                    {curGroupName && <ChatRoom groups={groups} groupName={curGroupName} onMessage={onMessage}/>}
                 </div>
             </div>
         </div>

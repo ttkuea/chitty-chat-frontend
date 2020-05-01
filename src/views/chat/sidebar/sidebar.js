@@ -17,8 +17,9 @@ const Sidebar = ({groups, profile, callback}) => {
     const createGroupInfo = (groups) => {
         const yourGroups = [];
         const otherGroups = [];
-        console.log('creae group info', groups)
-        groups.forEach(g => {
+        // console.log('creae group info', groups)
+        // `groups` is map
+        Object.values(groups).forEach(g => {
             const memberIds = g.members.map(member => member.userId);
             if (memberIds.includes(state.loginId)) {
                 yourGroups.push({...g});

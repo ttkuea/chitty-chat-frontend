@@ -7,6 +7,7 @@ import ChatBubble from './components/chat-bubble';
 import UnreadMarker from './components/unread-marker';
 
 import { store, socket } from '../../../store/store.js';
+import request from 'superagent';
 
 const fakeMessage = {
     message: "doge doge",
@@ -14,7 +15,7 @@ const fakeMessage = {
     timestamp: "2019-12-31T00:11:22Z"
 };
 
-const ChatRoom = ({ groupName}) => {
+const ChatRoom = ({groups, groupName, onMessage}) => {
     const { state, dispatch } = useContext(store);
     const [unread, setUnread] = useState([]);
     const [read, setRead] = useState([]);
@@ -29,16 +30,28 @@ const ChatRoom = ({ groupName}) => {
             setCurGroup(res);
             console.log('group messages with username', res);
         });
-
-        socket.on('server_emitChat', (res) => {
-            console.log(res);
-        });
         return () => {
             socket.off('server_emitChat');
             socket.off('server_emitOnEnterGroup');
             socket.emit('client_leaveGroup', {groupName: groupName, username:state.loginUsername});
         };
     }, []);
+
+    useEffect(() => {
+        console.log("now listening from group", groupName);
+        socket.on('server_emitChat', (res) => {
+            // append message to global state
+            console.log("new message <-", res)
+            onMessage({
+                groupName,
+                message: res,
+            });
+        })
+
+        return () => {
+            socket.off('server_emitChat');
+        }
+    }, [groupName, groups])
 
     const handleSendMsg = () => {
         const value = inputEl.current.textContent;
@@ -47,12 +60,21 @@ const ChatRoom = ({ groupName}) => {
         socket.emit('client_sendMsg', {
             groupName: groupName, 
             sender:state.loginUsername,
-            message: value});
+            message: value
+        });
     }
 
-    const createChat = () => {
-        
-    }
+    
+    // const createChat = () => {
+    //     const group = groups.filter(g => g.groupName == groupName)[0];
+    // }
+    const thisGroup = groups[groupName];
+    console.log("chat room data", groups);
+    const members = thisGroup.members;
+    // update message
+    thisGroup.messages.forEach(m => {
+        request.get(`http://`) // TODO how to find username
+    })
 
     return (
         <div className="chat-room">
@@ -60,15 +82,10 @@ const ChatRoom = ({ groupName}) => {
                 <div className="group-title"> {groupName}</div> 
             </div>
             <div className="chat">
-                <Repeat count={2}>
-                    <ChatBubble message={fakeMessage} isOwn={false}/>
-                    <ChatBubble message={fakeMessage} isOwn={false}/>
-                    <ChatBubble message={fakeMessage} isOwn={false}/>
-                    <ChatBubble message={fakeMessage} isOwn={true}/>
-                </Repeat>
-                <UnreadMarker/>
-                <ChatBubble message={fakeMessage} isOwn={false}/>
-                <ChatBubble message={fakeMessage} isOwn={true}/>
+                {/* {JSON.stringify(groups)} */}
+                {thisGroup.messages.map(m => {
+                    return <ChatBubble message={m}/>
+                })}
             </div>
             <div className="chat-box">
                 <div className="input" placeholder="Enter a message." ref={inputEl} contentEditable></div>
