@@ -1,7 +1,8 @@
 import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
-import { store } from '../store/store.js'
-// import config from '../config';
+import { store } from '../store/store.js';
+import config from '../config';
+import request from 'superagent';
 
 export const LoginPageStyle = styled.div`
   display: flex;
@@ -101,9 +102,9 @@ export const SubmitButton = ({ action, text }) => {
 };
 const LoginPage = () => {
   const { state, dispatch } = useContext(store);
-
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  console.log(state);
   const updateUserName = (value) => {
     setUsername(value);
     console.log(`username:${value}`);
@@ -112,53 +113,76 @@ const LoginPage = () => {
     setPassword(value);
     console.log(`password:${value}`);
   };
+
+  function login() {
+    request
+      .post(`${config.API_URL}/api/login`)
+      .send({
+        username: username,
+        password: password,
+      })
+      .then((res) => {
+        console.log(res.body);
+        dispatch({
+          type: 'login',
+          loginUsername: username,
+        });
+        alert('login complete');
+      })
+      .catch((err) => {
+        alert('Invalid username or password');
+      });
+  }
   const submit = () => {
-    alert(`submit\n username:${username}\n password:${password}`);
+    login();
+    // alert(`submit\n username:${username}\n password:${password}`);
   };
   // template by flap edit it
   const onLogin = async () => {
     const username = 'testusername';
 
-    await dispatch({ type: "login", payload: username });
-    
+    await dispatch({ type: 'login', payload: username });
+
     // delete when not use this teach you how to get value
-    //check login 
+    //check login
     // const isLogin = !(state.loginUsername == null)
-  }
+  };
 
   return (
-    <LoginPageStyle>
-      <div className='loginBox'>
-        <div className='d-flex justify-content-center'>
-          <h1>MEMBER LOGIN</h1>
-        </div>
-        <InputField
-          icon={'user'}
-          name='username'
-          type='text'
-          place='username'
-          callback={updateUserName}
-        />
-        <InputField
-          icon={'password'}
-          name='password'
-          type='password'
-          place='password'
-          callback={updatePassword}
-        />
+    state.loginUsername == null && (
+      <LoginPageStyle>
+        <div className='loginBox'>
+          <div className='d-flex justify-content-center'>
+            <h1>MEMBER LOGIN</h1>
+          </div>
+          <InputField
+            icon={'user'}
+            name='username'
+            type='text'
+            place='username'
+            callback={updateUserName}
+          />
+          <InputField
+            icon={'password'}
+            name='password'
+            type='password'
+            place='password'
+            callback={updatePassword}
+          />
 
-        <SubmitButton text='LOGIN' action={onsubmit} ></SubmitButton>
-        <div className='d-flex justify-content-center'>
-          <p>
-            don’t have any account ?
-            <a href={`/register`}>
-              {'  '}
-              <u>register now</u>
-            </a>
-          </p>
+          <SubmitButton text='LOGIN' action={submit}></SubmitButton>
+          <div className='d-flex justify-content-center'>
+            <p>
+              don’t have any account ?
+              <a href={`/register`}>
+                {'  '}
+                <u>register now</u>
+              </a>
+            </p>
+          </div>
         </div>
-      </div>
-    </LoginPageStyle>
+      </LoginPageStyle>
+    )
   );
 };
 

@@ -27,6 +27,11 @@ const StateProvider = ( { children } ) => {
                     ...state,
                     ...clone(action.groups)
                 }
+         	case 'login':
+        		return {
+          			...state,
+          			loginUsername: action.loginUsername,
+        		};
             default:
                 throw new Error();
         ;}

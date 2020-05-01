@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
@@ -6,11 +6,10 @@ import request from 'superagent';
 import Register from './register';
 import Login from './login';
 import CreateGroup from './create-group';
-
 import NotFoundPage from './not-found';
 import styled from 'styled-components';
-import Chat from "./views/chat/chat";
-import { StateProvider } from "./store/store";
+import Chat from './views/chat/chat';
+import { StateProvider } from './store/store';
 
 const Page = styled.div`
   margin: 0;

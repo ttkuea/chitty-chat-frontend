@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { LoginPageStyle, InputField, SubmitButton } from '../login/login';
 import styled from 'styled-components';
+import config from '../config';
+import request from 'superagent';
 
 const ImageUploaderStyle = styled.div`
   margin-top: 15px;
@@ -78,10 +80,37 @@ const RegisterPage = () => {
   };
 
   const submit = () => {
-    alert(
-      `submit\n image:${image}\n username:${username}\n password:${password}`
-    );
+    register();
+    // alert(`submit\n username:${username}\n password:${password}`);
   };
+
+  function register() {
+    request
+      .post(`${config.API_URL}/api/register`)
+      .send({
+        username: username,
+        password: password,
+      })
+      .then((res) => {
+        // const { token, username } = JSON.parse(res.text);
+        console.log(res.body);
+        // if (token) {
+        //   document.cookie = `token=${token}`;
+        //   document.location = '/';
+        // } else {
+        //   alert('invalid response from server');
+        // }
+        alert('register complete');
+      })
+      .catch((err) => {
+        // check if status is undefined
+        // const message = err.status
+        //   ? 'Username or Password is incorrect'
+        //   : 'Connection Error: CORS or connection refused';
+        // alert(message);
+        alert('Invalid username');
+      });
+  }
 
   return (
     <LoginPageStyle>
@@ -89,8 +118,7 @@ const RegisterPage = () => {
         <div className='d-flex justify-content-center'>
           <h1>REGISTRATION</h1>
         </div>
-
-        <ImageUploader callback={updateImage} />
+        {/**  <ImageUploader callback={updateImage} />*/}
 
         <InputField
           icon={'user'}
