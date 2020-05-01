@@ -15,30 +15,47 @@ const fakeMessage = {
     timestamp: "2019-12-31T00:11:22Z"
 };
 
+const sortByTimeStamp = (m1, m2) => {
+    const t1 = new Date(m1.timestamp);
+    const t2 = new Date(m2.timestamp);
+    return t1 - t2;
+}
+
 const ChatRoom = ({groups, groupName, onMessage}) => {
     const { state, dispatch } = useContext(store);
     const [messages, setMessages] = useState([]);
-    const [unreadPosition, setUnreadPosition] = useState(-1);
+    const [unreadId, setUnreadId] = useState(null);
 
     const inputEl = useRef(null);
 
+    console.log(unreadId)
     useEffect(() => {
     //     
         // get all previos message
         socket.on('server_emitOnEnterGroup', (res) => {
-            setUnreadPosition(res.Unread.length ? res.Read.length-1 : -1);
-            setMessages([...res.Read, ...res.Unread]);
+            // set unread date to last message if there's unread
+            console.log(res);
+            if (res.Unread.length) {
+                setUnreadId(res.Unread[0]._id);
+            } else {
+                setUnreadId(null);
+            }
+            const newMessages = [...res.Read, ...res.Unread];
+            newMessages.sort(sortByTimeStamp);
+            setMessages(newMessages);
         });
         return () => {
             socket.off('server_emitChat');
             socket.off('server_emitOnEnterGroup');
             socket.emit('client_leaveGroup', {groupName: groupName, username:state.loginUsername});
         };
-    }, []);
+    }, [groupName]);
 
     useEffect(() => {
         socket.on('server_emitChat', (res) => {
-            setMessages([...messages, res])
+            const newMessages = [...messages, res];
+            newMessages.sort(sortByTimeStamp);
+            setMessages(newMessages);
         })
 
         return () => {
@@ -80,10 +97,12 @@ const ChatRoom = ({groups, groupName, onMessage}) => {
             </div>
             <div className="chat" ref={chatRef}>
                 {/* {JSON.stringify(groups)} */}
-                {messages.map((m, index) => {
+                {messages.map((m) => {
                     return <>
+                        {
+                            m._id && unreadId == m._id && <UnreadMarker/>
+                        }
                         <ChatBubble message={m}/>
-                        {index == unreadPosition && <UnreadMarker/>}
                     </>
                 })}
             </div>
