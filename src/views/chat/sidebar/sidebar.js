@@ -1,4 +1,4 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useContext, useState, useEffect, Fragment} from 'react';
 import Section from './components/section';
 import UserItem from './components/user-item';
 import GroupItem from './components/group-item';
@@ -11,42 +11,70 @@ import LogoutIcon from './images/logout-icon.svg';
 
 import { store, socket } from '../../../store/store.js'
 
-const Sidebar = ({groups, profile}) => {
+const Sidebar = ({groups, profile, callback}) => {
     const { state, dispatch } = useContext(store);
-    const [yourGroups, setYourGroups] = useState([]);
-    const [otherGroups, setOtherGroups] = useState([]);
-    const [fetch, setFetch] = useState(false);
 
-    useEffect(() => {
-        socket.emit('client_getGroupInfo');
-        socket.on('server_emitGroupInfo', (res) => {
-            updateGroupInfo(res);
-        });
-        return () => {
-            socket.off('server_emitGroupInfo');
-            socket.emit('client_exitGroupInfo');
-        };
-    }, []);
-
-    const updateGroupInfo = (groups) => {
-        const newYourGroups = [];
-        const newOtherGroups = [];
-
+    const createGroupInfo = (groups) => {
+        const yourGroups = [];
+        const otherGroups = [];
+        console.log('creae group info', groups)
         groups.forEach(g => {
             const memberIds = g.members.map(member => member.userId);
             if (memberIds.includes(state.loginId)) {
-                newYourGroups.push({...g});
+                yourGroups.push({...g});
             } else {
-                newOtherGroups.push({...g});
+                otherGroups.push({...g});
             }
         });
-        setYourGroups(newYourGroups);
-        setOtherGroups(newOtherGroups);
+        return (
+            <Fragment>
+                <Section name="your group" action={<>
+                    <Link to='/create-group'>
+                        <img src={AddIcon} className="icon" />
+                    </Link>
+                </>
+                }>
+                    {
+                        yourGroups.map(g => {
+
+                            return <GroupItem group={g} callback={() => handleEnterGroup(g.groupName)}
+                                action={<img src={LogoutIcon} className="icon" onClick={() => handleLeaveGroup(g.groupName)} />}
+                            />;
+                        })
+                    }
+                </Section>
+                    <Section name="groups">
+                        {
+                            otherGroups.map(g => {
+                                return <GroupItem group={g} callback={() => handleEnterGroup(g.groupName)}
+                                    action={<img src={JoinIcon} className="icon" onClick={() => handleJoinGroup(g.groupName)} />}
+                                />
+                            })
+                        }
+                </Section>
+            </Fragment>
+        );
+
+    }
+    
+    const handleEnterGroup = (groupName) => {
+        console.log('enter group', groupName)
+        callback(groupName);
     }
 
     const handleJoinGroup = (groupName) => {
-        socket.emit('client_joinGroup', { groupName: groupName, 
-            username: state.loginUsername});
+        socket.emit('client_joinGroup', {
+            groupName: groupName,
+            username: state.loginUsername
+        });
+    }
+
+    const handleLeaveGroup = (groupName) => {
+
+        socket.emit('client_leaveGroup', {
+            groupName: groupName,
+            username: state.loginUsername
+        });
     }
 
     return (
@@ -54,30 +82,7 @@ const Sidebar = ({groups, profile}) => {
             <Section name="your profile">
                 <UserItem user={profile}/>
             </Section>
-            <Section name="your group" action={ <>
-                <Link to='/create-group'>
-                    <img src={AddIcon} className="icon"/>
-                </Link>
-            </>
-            }>
-                { 
-                    yourGroups.map(g => {
-                        
-                        return <GroupItem group={g}
-                            action={ <img src={LogoutIcon} className="icon"/> }
-                        />;
-                    })
-                }
-            </Section>
-            <Section name="groups">
-                { 
-                    otherGroups.map(g => {
-                        return <GroupItem group={g}
-                        action={ <img src={JoinIcon} className="icon" onClick={() => handleJoinGroup(g.groupName)} /> }
-                        />
-                    })
-                }
-            </Section>
+            {createGroupInfo(groups)}
 
         </div>
     )

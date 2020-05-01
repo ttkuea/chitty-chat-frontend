@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import './chat-room.scss';
 import { Repeat } from '../chat';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
@@ -15,26 +15,33 @@ const fakeMessage = {
 };
 
 const ChatRoom = ({groups, groupName}) => {
+    const { state, dispatch } = useContext(store);
     const [unread, setUnread] = useState([]);
     const [read, setRead] = useState([]);
+    const inputEl = useRef(null);
 
     useEffect(() => {
-        socket.emit('client_getChat');
-        socket.on('server_emitChat', (res) => {
-        });
-        socket.on()//TODO
+        socket.emit('client_enterGroup', {groupName: groupName});
+        // socket.on('server_emitChat', (res) => {
+        // });
         return () => {
-            socket.off('server_emitChat');
-            socket.emit('client_exitGroup');
+            // socket.off('server_emitChat');
+            socket.emit('client_leaveGroup', {groupName: groupName});
         };
     }, []);
 
-    const handleSendMsg = (msg) => {
-        socket.emit('client_sendMsg', {message: msg});
+    const handleSendMsg = () => {
+        const value = inputEl.current.textContent;
+        inputEl.current.textContent = undefined;
+
+        socket.emit('client_sendMsg', {
+            groupName: groupName, 
+            sender:state.loginUsername,
+            message: value});
     }
 
-    const updateChat = () => {
-        // socke
+    const createChat = () => {
+        const group = groups.filter(g => g.groupName == groupName)[0];
     }
 
     return (
@@ -54,9 +61,9 @@ const ChatRoom = ({groups, groupName}) => {
                 <ChatBubble message={fakeMessage} isOwn={true}/>
             </div>
             <div className="chat-box">
-                <div className="input" placeholder="Enter a message." contentEditable></div>
+                <div className="input" placeholder="Enter a message." ref={inputEl} contentEditable></div>
                 <div className="send">
-                    <button>
+                    <button onClick={handleSendMsg}>
                         <FontAwesomeIcon icon={faPaperPlane}/>
                     </button>
                 </div>

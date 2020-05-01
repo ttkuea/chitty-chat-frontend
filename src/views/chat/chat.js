@@ -26,10 +26,11 @@ const fakeGroups = [
 const Chat = () => {
     const { state, dispatch } = useContext(store);
     const [groups, setGroups] = useState([]);
+    const [curGroupName, setCurGroupName] = useState();
     useEffect(() => {
         socket.emit('client_getGroupInfo');
         socket.on('server_emitGroupInfo', (res) => {
-            setGroups(groups);
+            setGroups(res);
         });
         return () => {
             socket.off('server_emitGroupInfo');
@@ -40,16 +41,21 @@ const Chat = () => {
     const getProfile = {
         name: state.loginUsername,
         image: "https://i.pravatar.cc/120?u=rod41732",
-    }
+    };
+
+    const enterGroup_cb = (groupName) => {
+        console.log("fron end click enter group: ", groupName);
+        setCurGroupName(groupName);
+    };
 
     return (
         <div className="chat-page-layout">
             <div className="container">
                 <div className="sidebar">
-                    <Sidebar groups={groups} profile={getProfile}/>
+                    <Sidebar groups={groups} profile={getProfile} callback={enterGroup_cb}/>
                 </div>
                 <div className="main">
-                    <ChatRoom groups={groups} groupName={"foo"}/>
+                    {curGroupName && <ChatRoom groups={groups} groupName={curGroupName}/>}
                 </div>
             </div>
         </div>
