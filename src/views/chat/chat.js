@@ -42,9 +42,6 @@ const Chat = () => {
     return (
         <div className="chat-page-layout">
             <div className="container">
-                <div className="header">
-                    <div className="chat-title"> Chitty Chat </div>
-                </div>
                 <div className="sidebar">
                     <Sidebar groups={fakeGroups} profile={fakeProfile}/>
                 </div>

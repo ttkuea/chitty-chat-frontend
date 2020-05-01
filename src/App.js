@@ -33,17 +33,23 @@ const App = () => {
     <Page>
       <Head>CHITTY CHAT</Head>
       <Router>
-        <Switch>
-          <Route exact path='/register'>
-            <Register />
-          </Route>
-          <Route exact path='/login'>
-            <Login />
-          </Route>
-          <Route path=''>
-            <Login />
-          </Route>
-        </Switch>
+
+        <StateProvider>
+
+          <Switch>
+            <Route exact path='/register'>
+              <Register />
+            </Route>
+            <Route exact path='/login'>
+              <Login />
+            </Route>
+            <Route path='/chat'>
+              <Chat />
+            </Route>
+          </Switch>  
+
+        </StateProvider>
+        
       </Router>
     </Page>
   );
