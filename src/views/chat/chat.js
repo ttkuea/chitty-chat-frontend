@@ -21,18 +21,19 @@ const fakeGroups = [
     {name: "Road", image: "https://i.pravatar.cc/120?u=road", join: 1},
 ];
 
-const fakeProfile = {
-    name: "Rodchananat",
-    image: "https://i.pravatar.cc/120?u=rod41732",
-}
+
 
 const Chat = () => {
     const { state, dispatch } = useContext(store);
-
+    
     useEffect(() => {
         socket.emit('client_getGroupInfo');
         socket.on('server_emitGroupInfo', (res) => {
-            console.log(res);
+            dispatch({ type:'set',
+            
+                newState: { groups: res }
+            })
+            console.log('state', state.groups);
         });
         return () => {
             socket.off('server_emitGroupInfo');
@@ -40,15 +41,16 @@ const Chat = () => {
         };
     }, []);
 
-    const onChange = (groups) => {
-        dispatch({type:'update_group', groups: groups});
+    const getProfile = {
+        name: state.loginUsername,
+        image: "https://i.pravatar.cc/120?u=rod41732",
     }
 
     return (
         <div className="chat-page-layout">
             <div className="container">
                 <div className="sidebar">
-                    <Sidebar groups={fakeGroups} profile={fakeProfile}/>
+                    <Sidebar profile={getProfile}/>
                 </div>
                 <div className="main">
                     <ChatRoom groupName={"foo"}/>

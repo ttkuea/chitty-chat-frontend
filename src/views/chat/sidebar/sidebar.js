@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import Section from './components/section';
 import UserItem from './components/user-item';
 import GroupItem from './components/group-item';
@@ -9,10 +9,45 @@ import JoinIcon from './images/join-icon.svg';
 import AddIcon from './images/add-icon.svg';
 import LogoutIcon from './images/logout-icon.svg';
 
-const Sidebar = ({groups, profile}) => {
-    const yourGroups = groups.filter(g => g.join);
-    const otherGroups = groups.filter(g => !g.join);
+import { store, socket } from '../../../store/store.js'
 
+const Sidebar = ({profile}) => {
+    const { state, dispatch } = useContext(store);
+    const [yourGroups, setYourGroups] = useState([]);
+    const [otherGroups, setOtherGroups] = useState([]);
+    const [fetch, setFetch] = useState(false);
+
+    useEffect(() => {
+        socket.emit('client_getGroupInfo');
+        socket.on('server_emitGroupInfo', (res) => {
+            updateGroupInfo(res);
+        });
+        return () => {
+            socket.off('server_emitGroupInfo');
+            socket.emit('client_exitGroupInfo');
+        };
+    }, []);
+
+    const updateGroupInfo = (groups) => {
+        const newYourGroups = [];
+        const newOtherGroups = [];
+
+        groups.forEach(g => {
+            const memberIds = g.members.map(member => member.userId);
+            if (memberIds.includes(state.loginId)) {
+                newYourGroups.push({...g});
+            } else {
+                newOtherGroups.push({...g});
+            }
+        });
+        setYourGroups(newYourGroups);
+        setOtherGroups(newOtherGroups);
+    }
+
+    const handleJoinGroup = (groupName) => {
+        socket.emit('client_joinGroup', { groupName: groupName, 
+            username: state.loginUsername});
+    }
 
     return (
         <div className="chat-sidebar">
@@ -27,6 +62,7 @@ const Sidebar = ({groups, profile}) => {
             }>
                 { 
                     yourGroups.map(g => {
+                        
                         return <GroupItem group={g}
                             action={ <img src={LogoutIcon} className="icon"/> }
                         />;
@@ -37,7 +73,7 @@ const Sidebar = ({groups, profile}) => {
                 { 
                     otherGroups.map(g => {
                         return <GroupItem group={g}
-                        action={ <img src={JoinIcon} className="icon"/> }
+                        action={ <img src={JoinIcon} className="icon" onClick={() => handleJoinGroup(g.groupName)} /> }
                         />
                     })
                 }

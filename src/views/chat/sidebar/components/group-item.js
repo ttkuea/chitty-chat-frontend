@@ -2,9 +2,9 @@ import React from 'react';
 import Item from './item';
 
 const GroupItem = ({group, action}) => {
-    const {name, image} = group;
+    const {groupName, image} = group;
     return (
-        <Item image={image} name={name}>
+        <Item image={image} name={groupName}>
             { action }
         </Item>
     )

@@ -32,11 +32,11 @@ const Head = styled.div`
 `;
 const App = () => {
   return (
+        <StateProvider>
     <Page>
       <Head>CHITTY CHAT</Head>
       <Router>
 
-        <StateProvider>
 
           <Switch>
           <Route exact path='/register'>
@@ -56,10 +56,10 @@ const App = () => {
           </Route>
         </Switch>
 
-        </StateProvider>
         
       </Router>
     </Page>
+        </StateProvider>
   );
 };
 
