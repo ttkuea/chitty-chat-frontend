@@ -1,24 +1,18 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { LoginPageStyle, InputField, SubmitButton } from '../login/login';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 const ImageUploaderStyle = styled.div`
   margin-top: 15px;
-  width: 126px;
-  height: 126px;
-  background-image: url('user-icon.svg');
-  ${({ image }) =>
-    image &&
-    css`
-      background-image: ${({ image }) => 'url(' + image + ')'};
-      background-size: 100%;
-    `}
   button {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     border: none;
     background-image: url('camera-icon.svg');
+    z-index: 1;
+    margin-left: -50px;
+    /* margin-top:-50px; */
   }
   #output_image {
     width: 126px;
@@ -26,18 +20,22 @@ const ImageUploaderStyle = styled.div`
     border-radius: 50%;
     border: none;
   }
+  img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+  }
 `;
 
-const ImageUploader = ({ action }) => {
+const ImageUploader = ({ callback }) => {
   const [image, setImage] = useState();
-  const previewImage = (event) => {
+  const handleChange = (event) => {
     var reader = new FileReader();
     reader.onload = function () {
-      // var output = document.getElementById('output_image');
-      // output.src = reader.result;
       setImage(reader.result);
     };
     reader.readAsDataURL(event.target.files[0]);
+    callback(event.target.value);
   };
 
   return (
@@ -45,9 +43,19 @@ const ImageUploader = ({ action }) => {
       <ImageUploaderStyle
         className='d-flex justify-content-end align-items-end'
         image={image}>
-        <button onClick={action}></button>
+        <img className='profile-image' src={image || 'user-icon.svg'} />
+        <label for='imageUpload'>
+          <button></button>
+        </label>
       </ImageUploaderStyle>
-      <input type='file' accept='image/*' onChange={previewImage} />
+      <input
+        id='imageUpload'
+        type='file'
+        accept='image/*'
+        onChange={handleChange}
+        style={{ display: 'none' }}
+      />
+      {/** <input type='file' accept='image/*' onChange={handleChange} />*/}
     </div>
   );
 };
@@ -65,24 +73,14 @@ const RegisterPage = () => {
     console.log(`password:${value}`);
   };
   const updateImage = (value) => {
-    console.log(value);
     setImage(value);
+    console.log(value);
   };
 
-  const uploadImage = () => {
-    alert('uploadImage');
-  };
   const submit = () => {
-    alert(`submit\n username:${username}\n password:${password}`);
-  };
-
-  const previewImage = (event) => {
-    var reader = new FileReader();
-    reader.onload = function () {
-      var output = document.getElementById('output_image');
-      output.src = reader.result;
-    };
-    reader.readAsDataURL(event.target.files[0]);
+    alert(
+      `submit\n image:${image}\n username:${username}\n password:${password}`
+    );
   };
 
   return (
@@ -92,7 +90,7 @@ const RegisterPage = () => {
           <h1>REGISTRATION</h1>
         </div>
 
-        <ImageUploader action={uploadImage} />
+        <ImageUploader callback={updateImage} />
 
         <InputField
           icon={'user'}
