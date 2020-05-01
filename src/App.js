@@ -5,6 +5,8 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import request from 'superagent';
 import Register from './register';
 import Login from './login';
+import CreateGroup from './create-group';
+
 import NotFoundPage from './not-found';
 import styled from 'styled-components';
 
@@ -37,6 +39,9 @@ const App = () => {
           </Route>
           <Route exact path='/login'>
             <Login />
+          </Route>
+          <Route exact path='/create-group'>
+            <CreateGroup />
           </Route>
           <Route path=''>
             <Login />

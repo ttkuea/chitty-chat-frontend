@@ -25,12 +25,6 @@ export const LoginPageStyle = styled.div`
   a {
     color: #415051;
   }
-  #output_image {
-    width: 126px;
-    height: 126px;
-    border-radius: 50%;
-    border: none;
-  }
 `;
 
 export const ButtonStyle = styled.button`
