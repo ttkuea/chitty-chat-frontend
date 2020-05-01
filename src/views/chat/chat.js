@@ -49,12 +49,11 @@ const Chat = () => {
     };
 
     const enterGroup_cb = (groupName) => {
-        setCurGroupName(groupName);
 
         // exit old group
         curGroupName && socket.emit('client_leaveGroup', { groupName: curGroupName, username: state.loginUsername });
+        setCurGroupName(groupName);        
         socket.emit('client_enterGroup', { groupName: groupName, username: state.loginUsername });
-        
     };
     
     function onMessage(event) {

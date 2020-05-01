@@ -38,17 +38,13 @@ const ChatRoom = ({groups, groupName, onMessage}) => {
 
     useEffect(() => {
         socket.on('server_emitChat', (res) => {
-            // append message to global state
-            onMessage({
-                groupName,
-                message: res,
-            });
+            setMessages([...messages, res])
         })
 
         return () => {
             socket.off('server_emitChat');
         }
-    }, [groupName, groups])
+    }, [messages])
 
     const handleSendMsg = () => {
         const value = inputEl.current.textContent;
@@ -65,17 +61,16 @@ const ChatRoom = ({groups, groupName, onMessage}) => {
     // const createChat = () => {
     //     const group = groups.filter(g => g.groupName == groupName)[0];
     // }
-    const thisGroup = groups[groupName];
-    const members = thisGroup.members;
     // update message
-    thisGroup.messages.forEach(m => {
-        request.get(`http://`) // TODO how to find username
-    })
+    // thisGroup.messages.forEach(m => {
+    //     request.get(`http://`) // TODO how to find username
+    // })
 
     const chatRef = useRef();
     // chatRef.current && console.log(chatRef.current);
     useEffect(() => {
-        chatRef && chatRef.current.lastChild.scrollIntoView();
+        const el = chatRef.current;
+        el && el.lastChild && el.lastChild.scrollIntoView();
     });
 
     return (
@@ -85,7 +80,7 @@ const ChatRoom = ({groups, groupName, onMessage}) => {
             </div>
             <div className="chat" ref={chatRef}>
                 {/* {JSON.stringify(groups)} */}
-                {thisGroup.messages.map((m, index) => {
+                {messages.map((m, index) => {
                     return <>
                         <ChatBubble message={m}/>
                         {index == unreadPosition && <UnreadMarker/>}
