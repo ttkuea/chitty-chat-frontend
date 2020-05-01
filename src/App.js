@@ -5,6 +5,8 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import request from 'superagent';
 import Register from './register';
 import Login from './login';
+import CreateGroup from './create-group';
+
 import NotFoundPage from './not-found';
 import styled from 'styled-components';
 import Chat from "./views/chat/chat";
@@ -37,16 +39,22 @@ const App = () => {
         <StateProvider>
 
           <Switch>
-            <Route exact path='/register'>
-              <Register />
-            </Route>
-            <Route exact path='/login'>
-              <Login />
-            </Route>
-            <Route path='/chat'>
+          <Route exact path='/register'>
+            <Register />
+          </Route>
+          <Route exact path='/login'>
+            <Login />
+          </Route>
+          <Route exact path='/create-group'>
+            <CreateGroup />
+          </Route>
+          <Route path='/chat'>
               <Chat />
-            </Route>
-          </Switch>  
+          </Route>
+          <Route path=''>
+            <Login />
+          </Route>
+        </Switch>
 
         </StateProvider>
         
