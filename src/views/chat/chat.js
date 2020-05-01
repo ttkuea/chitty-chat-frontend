@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect, useContext } from 'react';
 import './chat.scss';
 import Sidebar from './sidebar/sidebar';
 import ChatRoom from './chat-room/chat-room';
+import socketIOClient from 'socket.io-client'
+import { store } from '../../store/store.js'
 
 export const Repeat = ({children, count}) => {
     return <>
@@ -26,6 +28,17 @@ const fakeProfile = {
 }
 
 const Chat = () => {
+    const { state, dispatch } = useContext(store);
+
+    let socket;
+
+    useEffect(() => {
+        socket = socketIOClient(state.endpoint)
+        return function cleanup() {
+            
+        };   
+    });
+
     return (
         <div className="chat-page-layout">
             <div className="container">
