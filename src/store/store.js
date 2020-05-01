@@ -3,7 +3,7 @@ import React, {createContext, useReducer} from 'react';
 import socketIOClient from 'socket.io-client';
 import { clone } from 'ramda';
 
-const ENDPOINT = process.env.ENDPOINT || "http://localhost:3000";
+const ENDPOINT = process.env.ENDPOINT || "http://rod41732.ml:3000";
 const socket = window.gsocket = socketIOClient(ENDPOINT); // tolerate reload 
 
 const initialState = {  loginUsername: null, //TODO change to null
@@ -34,7 +34,8 @@ const StateProvider = ( { children } ) => {
           			...state,
                       loginUsername: action.loginUsername,
                       loginId: action.loginId
-        		};
+                };
+                return newState;
             default:
                 throw new Error();
         ;}
