@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { store } from '../store/store.js'
 // import config from '../config';
 
-const LoginPageStyle = styled.div`
+export const LoginPageStyle = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -28,7 +28,7 @@ const LoginPageStyle = styled.div`
   }
 `;
 
-const ButtonStyle = styled.button`
+export const ButtonStyle = styled.button`
   width: 456px;
   height: 50px;
   border: 1px solid #323232;
@@ -44,7 +44,7 @@ const ButtonStyle = styled.button`
   }
 `;
 
-const InputStyle = styled.input`
+export const InputStyle = styled.input`
   background-image: ${({ icon }) => 'url(' + icon + '-icon.svg)'};
   background-repeat: no-repeat;
   background-position: 10px;

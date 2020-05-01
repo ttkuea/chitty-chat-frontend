@@ -5,10 +5,11 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import request from 'superagent';
 import Register from './register';
 import Login from './login';
+import CreateGroup from './create-group';
 import NotFoundPage from './not-found';
 import styled from 'styled-components';
-import Chat from "./views/chat/chat";
-import { StateProvider } from "./store/store";
+import Chat from './views/chat/chat';
+import { StateProvider } from './store/store';
 
 const Page = styled.div`
   margin: 0;
@@ -33,9 +34,7 @@ const App = () => {
     <Page>
       <Head>CHITTY CHAT</Head>
       <Router>
-
         <StateProvider>
-
           <Switch>
             <Route exact path='/register'>
               <Register />
@@ -46,10 +45,14 @@ const App = () => {
             <Route path='/chat'>
               <Chat />
             </Route>
-          </Switch>  
-
+            <Route exact path='/create-group'>
+              <CreateGroup />
+            </Route>
+            <Route path=''>
+              <Login />
+            </Route>
+          </Switch>
         </StateProvider>
-        
       </Router>
     </Page>
   );

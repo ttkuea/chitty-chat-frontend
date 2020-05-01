@@ -12,7 +12,6 @@ const ImageUploaderStyle = styled.div`
     background-image: url('camera-icon.svg');
     z-index: 1;
     margin-left: -50px;
-    /* margin-top:-50px; */
   }
   #output_image {
     width: 126px;
@@ -55,22 +54,16 @@ const ImageUploader = ({ callback }) => {
         onChange={handleChange}
         style={{ display: 'none' }}
       />
-      {/** <input type='file' accept='image/*' onChange={handleChange} />*/}
     </div>
   );
 };
 
 const RegisterPage = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [groupname, setGroupname] = useState('');
   const [image, setImage] = useState();
-  const updateUserName = (value) => {
-    setUsername(value);
-    console.log(`username:${value}`);
-  };
-  const updatePassword = (value) => {
-    setPassword(value);
-    console.log(`password:${value}`);
+  const updateGroupname = (value) => {
+    setGroupname(value);
+    console.log(`groupname:${value}`);
   };
   const updateImage = (value) => {
     setImage(value);
@@ -78,45 +71,27 @@ const RegisterPage = () => {
   };
 
   const submit = () => {
-    alert(
-      `submit\n image:${image}\n username:${username}\n password:${password}`
-    );
+    alert(`submit\n image:${image}\n groupname:${groupname}`);
   };
 
   return (
     <LoginPageStyle>
       <div className='loginBox'>
         <div className='d-flex justify-content-center'>
-          <h1>REGISTRATION</h1>
+          <h1>CREATE A NEW GROUP</h1>
         </div>
 
         <ImageUploader callback={updateImage} />
 
         <InputField
           icon={'user'}
-          name='username'
+          name='groupname'
           type='text'
-          place='username'
-          callback={updateUserName}
-        />
-        <InputField
-          icon={'password'}
-          name='password'
-          type='password'
-          place='password'
-          callback={updatePassword}
+          place='group name'
+          callback={updateGroupname}
         />
 
-        <SubmitButton text='REGISTER' action={submit}></SubmitButton>
-        <div className='d-flex justify-content-center'>
-          <p>
-            already have an account ?
-            <a href={`/login`}>
-              {'  '}
-              <u>login</u>
-            </a>
-          </p>
-        </div>
+        <SubmitButton text='CREATE' action={submit}></SubmitButton>
       </div>
     </LoginPageStyle>
   );
