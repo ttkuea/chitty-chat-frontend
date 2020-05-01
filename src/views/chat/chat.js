@@ -27,9 +27,7 @@ const Chat = () => {
     const { state, dispatch } = useContext(store);
     const [groups, setGroups] = useState({});
     const [curGroupName, setCurGroupName] = useState();
-    console.log("Chat state is", groups);
     useEffect(() => {
-        console.log("chat effect");
         socket.emit('client_getGroupInfo');
         socket.on('server_emitGroupInfo', (res) => {
             // convert to map
@@ -51,7 +49,6 @@ const Chat = () => {
     };
 
     const enterGroup_cb = (groupName) => {
-        console.log("fron end click enter group: ", groupName);
         setCurGroupName(groupName);
 
         // exit old group
@@ -60,15 +57,9 @@ const Chat = () => {
         
     };
     
-    const hackState = useRef(groups);
-
     function onMessage(event) {
         const {groupName, message} = event;
-        const thisState = {...groups, ...hackState.current};
-        console.log("[update] current state is", thisState);
-        // console.log("recv message from channel", event.groupName);
-        // console.log("message was", groups[groupName].messages)
-        // console.log("this group had %d message", groups[groupName].messages.length);
+        const thisState = groups;
         const newState = {
             ...thisState,
         };
@@ -79,10 +70,6 @@ const Chat = () => {
                 message,
             ]
         };
-        // console.log("this group now has %d message", groups[groupName].messages.length)
-        // console.log("message would become", newState[groupName].messages);
-        console.log("[update] new state", newState)
-        hackState.current = newState;
         setGroups(newState);
     }
 

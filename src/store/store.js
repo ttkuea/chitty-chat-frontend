@@ -22,21 +22,18 @@ const StateProvider = ( { children } ) => {
                     ...state,
                     ...clone(action.newState)
                 };
-                console.log("new state", newState);
                 return newState;
             case 'setGroup':
                 newState = {
                     ...state,
                     ...clone(action.groups)
                 };
-                console.log("new state", newState);
                 return newState;
          	case 'login':
         		newState = {
           			...state,
           			loginUsername: action.loginUsername,
                 };
-                console.log("new state", newState);
                 return newState;
             case 'newMessage':
                 const {groupName, message} = action.payload;
@@ -46,7 +43,6 @@ const StateProvider = ( { children } ) => {
                 //         ...state.
                 //     }
                 // }
-                console.log("new state", newState);
                 return newState;
             default:
                 throw new Error();
