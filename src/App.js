@@ -15,7 +15,6 @@ const Page = styled.div`
   margin: 0;
   margin-left: auto;
   margin-right: auto;
-  width: 1547px;
   height: 100vh;
   background-color: #a3d1d3;
   color: black;
