@@ -1,7 +1,8 @@
 import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
-import { store } from '../store/store.js'
-// import config from '../config';
+import { store } from '../store/store.js';
+import config from '../config';
+import request from 'superagent';
 
 export const LoginPageStyle = styled.div`
   display: flex;
@@ -112,19 +113,48 @@ const LoginPage = () => {
     setPassword(value);
     console.log(`password:${value}`);
   };
+
+  function login() {
+    request
+      .post(`${config.API_URL}/api/login`)
+      .send({
+        username: username,
+        password: password,
+      })
+      .then((res) => {
+        // const { token, username } = JSON.parse(res.text);
+        console.log(res.body);
+        // if (token) {
+        //   document.cookie = `token=${token}`;
+        //   document.location = '/';
+        // } else {
+        //   alert('invalid response from server');
+        // }
+        alert('login complete');
+      })
+      .catch((err) => {
+        // check if status is undefined
+        // const message = err.status
+        //   ? 'Username or Password is incorrect'
+        //   : 'Connection Error: CORS or connection refused';
+        // alert(message);
+        alert('Invalid username or password');
+      });
+  }
   const submit = () => {
-    alert(`submit\n username:${username}\n password:${password}`);
+    login();
+    // alert(`submit\n username:${username}\n password:${password}`);
   };
   // template by flap edit it
   const onLogin = async () => {
     const username = 'testusername';
 
-    await dispatch({ type: "login", payload: username });
-    
+    await dispatch({ type: 'login', payload: username });
+
     // delete when not use this teach you how to get value
-    //check login 
+    //check login
     // const isLogin = !(state.loginUsername == null)
-  }
+  };
 
   return (
     <LoginPageStyle>
@@ -147,7 +177,7 @@ const LoginPage = () => {
           callback={updatePassword}
         />
 
-        <SubmitButton text='LOGIN' action={onsubmit} ></SubmitButton>
+        <SubmitButton text='LOGIN' action={submit}></SubmitButton>
         <div className='d-flex justify-content-center'>
           <p>
             don’t have any account ?
