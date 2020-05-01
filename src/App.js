@@ -1,15 +1,52 @@
-import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import React, { useRef } from 'react';
+import logo from './logo.svg';
+import './App.css';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import request from 'superagent';
+import Register from './register';
+import Login from './login';
+import NotFoundPage from './not-found';
+import styled from 'styled-components';
 import Chat from "./views/chat/chat";
 import { StateProvider } from "./store/store";
 
-function App() {
+const Page = styled.div`
+  margin: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 1547px;
+  height: 100vh;
+  background-color: #a3d1d3;
+  color: black;
+`;
+const Head = styled.div`
+  background-color: #323232;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 32px;
+`;
+const App = () => {
   return (
-    <StateProvider>
-      <Chat/>
-    </StateProvider>
+    <Page>
+      <Head>CHITTY CHAT</Head>
+      <Router>
+        <Switch>
+          <Route exact path='/register'>
+            <Register />
+          </Route>
+          <Route exact path='/login'>
+            <Login />
+          </Route>
+          <Route path=''>
+            <Login />
+          </Route>
+        </Switch>
+      </Router>
+    </Page>
   );
-}
+};
 
-export default App;
+export default () => <App />;
