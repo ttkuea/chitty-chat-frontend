@@ -17,9 +17,8 @@ const fakeMessage = {
 
 const ChatRoom = ({groups, groupName, onMessage}) => {
     const { state, dispatch } = useContext(store);
-    const [unread, setUnread] = useState([]);
-    const [read, setRead] = useState([]);
-    const [curGroup, setCurGroup] = useState(null);
+    const [messages, setMessages] = useState([]);
+    const [unreadPosition, setUnreadPosition] = useState(-1);
 
     const inputEl = useRef(null);
 
@@ -27,8 +26,8 @@ const ChatRoom = ({groups, groupName, onMessage}) => {
     //     
         // get all previos message
         socket.on('server_emitOnEnterGroup', (res) => {
-            setCurGroup(res);
-            console.log('group messages with username', res);
+            setUnreadPosition(res.Unread.length ? res.Read.length-1 : -1);
+            setMessages([...res.Read, ...res.Unread]);
         });
         return () => {
             socket.off('server_emitChat');
@@ -38,10 +37,8 @@ const ChatRoom = ({groups, groupName, onMessage}) => {
     }, []);
 
     useEffect(() => {
-        console.log("now listening from group", groupName);
         socket.on('server_emitChat', (res) => {
             // append message to global state
-            console.log("new message <-", res)
             onMessage({
                 groupName,
                 message: res,
@@ -69,22 +66,30 @@ const ChatRoom = ({groups, groupName, onMessage}) => {
     //     const group = groups.filter(g => g.groupName == groupName)[0];
     // }
     const thisGroup = groups[groupName];
-    console.log("chat room data", groups);
     const members = thisGroup.members;
     // update message
     thisGroup.messages.forEach(m => {
         request.get(`http://`) // TODO how to find username
     })
 
+    const chatRef = useRef();
+    // chatRef.current && console.log(chatRef.current);
+    useEffect(() => {
+        chatRef && chatRef.current.lastChild.scrollIntoView();
+    });
+
     return (
         <div className="chat-room">
             <div className="title">
                 <div className="group-title"> {groupName}</div> 
             </div>
-            <div className="chat">
+            <div className="chat" ref={chatRef}>
                 {/* {JSON.stringify(groups)} */}
-                {thisGroup.messages.map(m => {
-                    return <ChatBubble message={m}/>
+                {thisGroup.messages.map((m, index) => {
+                    return <>
+                        <ChatBubble message={m}/>
+                        {index == unreadPosition && <UnreadMarker/>}
+                    </>
                 })}
             </div>
             <div className="chat-box">
