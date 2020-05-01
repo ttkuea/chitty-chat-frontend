@@ -102,9 +102,9 @@ export const SubmitButton = ({ action, text }) => {
 };
 const LoginPage = () => {
   const { state, dispatch } = useContext(store);
-
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  console.log(state);
   const updateUserName = (value) => {
     setUsername(value);
     console.log(`username:${value}`);
@@ -122,22 +122,14 @@ const LoginPage = () => {
         password: password,
       })
       .then((res) => {
-        // const { token, username } = JSON.parse(res.text);
         console.log(res.body);
-        // if (token) {
-        //   document.cookie = `token=${token}`;
-        //   document.location = '/';
-        // } else {
-        //   alert('invalid response from server');
-        // }
+        dispatch({
+          type: 'login',
+          loginUsername: username,
+        });
         alert('login complete');
       })
       .catch((err) => {
-        // check if status is undefined
-        // const message = err.status
-        //   ? 'Username or Password is incorrect'
-        //   : 'Connection Error: CORS or connection refused';
-        // alert(message);
         alert('Invalid username or password');
       });
   }
@@ -157,38 +149,40 @@ const LoginPage = () => {
   };
 
   return (
-    <LoginPageStyle>
-      <div className='loginBox'>
-        <div className='d-flex justify-content-center'>
-          <h1>MEMBER LOGIN</h1>
-        </div>
-        <InputField
-          icon={'user'}
-          name='username'
-          type='text'
-          place='username'
-          callback={updateUserName}
-        />
-        <InputField
-          icon={'password'}
-          name='password'
-          type='password'
-          place='password'
-          callback={updatePassword}
-        />
+    state.loginUsername == null && (
+      <LoginPageStyle>
+        <div className='loginBox'>
+          <div className='d-flex justify-content-center'>
+            <h1>MEMBER LOGIN</h1>
+          </div>
+          <InputField
+            icon={'user'}
+            name='username'
+            type='text'
+            place='username'
+            callback={updateUserName}
+          />
+          <InputField
+            icon={'password'}
+            name='password'
+            type='password'
+            place='password'
+            callback={updatePassword}
+          />
 
-        <SubmitButton text='LOGIN' action={submit}></SubmitButton>
-        <div className='d-flex justify-content-center'>
-          <p>
-            don’t have any account ?
-            <a href={`/register`}>
-              {'  '}
-              <u>register now</u>
-            </a>
-          </p>
+          <SubmitButton text='LOGIN' action={submit}></SubmitButton>
+          <div className='d-flex justify-content-center'>
+            <p>
+              don’t have any account ?
+              <a href={`/register`}>
+                {'  '}
+                <u>register now</u>
+              </a>
+            </p>
+          </div>
         </div>
-      </div>
-    </LoginPageStyle>
+      </LoginPageStyle>
+    )
   );
 };
 
