@@ -1,12 +1,18 @@
 import React, { useState, useRef } from 'react';
 import { LoginPageStyle, InputField, SubmitButton } from '../login/login';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const ImageUploaderStyle = styled.div`
   margin-top: 15px;
   width: 126px;
   height: 126px;
   background-image: url('user-icon.svg');
+  ${({ image }) =>
+    image &&
+    css`
+      background-image: ${({ image }) => 'url(' + image + ')'};
+      background-size: 100%;
+    `}
   button {
     width: 30px;
     height: 30px;
@@ -14,20 +20,34 @@ const ImageUploaderStyle = styled.div`
     border: none;
     background-image: url('camera-icon.svg');
   }
+  #output_image {
+    width: 126px;
+    height: 126px;
+    border-radius: 50%;
+    border: none;
+  }
 `;
 
 const ImageUploader = ({ action }) => {
+  const [image, setImage] = useState();
+  const previewImage = (event) => {
+    var reader = new FileReader();
+    reader.onload = function () {
+      // var output = document.getElementById('output_image');
+      // output.src = reader.result;
+      setImage(reader.result);
+    };
+    reader.readAsDataURL(event.target.files[0]);
+  };
+
   return (
     <div className='d-flex justify-content-center'>
-      <input
-        type='file'
-        id='img'
-        name='img'
-        accept='image/*'
-        style={{ display: 'none' }}></input>
-      <ImageUploaderStyle className='d-flex justify-content-end align-items-end'>
+      <ImageUploaderStyle
+        className='d-flex justify-content-end align-items-end'
+        image={image}>
         <button onClick={action}></button>
       </ImageUploaderStyle>
+      <input type='file' accept='image/*' onChange={previewImage} />
     </div>
   );
 };
@@ -54,6 +74,15 @@ const RegisterPage = () => {
   };
   const submit = () => {
     alert(`submit\n username:${username}\n password:${password}`);
+  };
+
+  const previewImage = (event) => {
+    var reader = new FileReader();
+    reader.onload = function () {
+      var output = document.getElementById('output_image');
+      output.src = reader.result;
+    };
+    reader.readAsDataURL(event.target.files[0]);
   };
 
   return (
