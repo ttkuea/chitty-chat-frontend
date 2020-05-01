@@ -1,9 +1,8 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import './chat.scss';
 import Sidebar from './sidebar/sidebar';
 import ChatRoom from './chat-room/chat-room';
-import socketIOClient from 'socket.io-client'
-import { store } from '../../store/store.js'
+import { store, socket } from '../../store/store.js'
 
 export const Repeat = ({children, count}) => {
     return <>
@@ -29,23 +28,15 @@ const fakeProfile = {
 
 const Chat = () => {
     const { state, dispatch } = useContext(store);
-    let gsocket; // fetch group information for side bar
 
     useEffect(() => {
-        gsocket = socketIOClient(state.endpoint);
-        dispatch({
-            type: 'set',
-            newState: {
-                gsocket: gsocket
-            }
-        });
-        
-        gsocket.emit('client_init', {role: 'g'});
-        gsocket.on('server_emitGroups', (res) => {
+        socket.emit('client_getGroupInfo');
+        socket.on('server_emitGroupInfo', (res) => {
             console.log(res);
         });
-        return function cleanup() {
-            gsocket.removeAllListeners();
+        return () => {
+            socket.off('server_emitGroupInfo');
+            socket.emit('client_exitGroupInfo');
         };
     }, []);
 

@@ -3,6 +3,8 @@ import Section from './components/section';
 import UserItem from './components/user-item';
 import GroupItem from './components/group-item';
 
+import {Link} from 'react-router-dom';
+
 import JoinIcon from './images/join-icon.svg';
 import AddIcon from './images/add-icon.svg';
 import LogoutIcon from './images/logout-icon.svg';
@@ -17,8 +19,11 @@ const Sidebar = ({groups, profile}) => {
             <Section name="your profile">
                 <UserItem user={profile}/>
             </Section>
-            <Section name="your group" action={
-                <img src={AddIcon} className="icon"/>
+            <Section name="your group" action={ <>
+                <Link to='/create-group'>
+                    <img src={AddIcon} className="icon"/>
+                </Link>
+            </>
             }>
                 { 
                     yourGroups.map(g => {

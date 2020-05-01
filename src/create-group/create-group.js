@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { LoginPageStyle, InputField, SubmitButton } from '../login/login';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+
+import socketIOClient from 'socket.io-client'
+import { store, socket } from '../store/store.js';
 
 const ImageUploaderStyle = styled.div`
   margin-top: 15px;
@@ -58,9 +62,14 @@ const ImageUploader = ({ callback }) => {
   );
 };
 
+// const gsocket = socketIOClient(ENDPOINT);
+
 const RegisterPage = () => {
+  const {state, dispatch} = useContext(store);
+
   const [groupname, setGroupname] = useState('');
   const [image, setImage] = useState();
+
   const updateGroupname = (value) => {
     setGroupname(value);
     console.log(`groupname:${value}`);
@@ -71,7 +80,8 @@ const RegisterPage = () => {
   };
 
   const submit = () => {
-    alert(`submit\n image:${image}\n groupname:${groupname}`);
+    socket.emit('client_createGroup', {groupName: groupname});
+    // alert(`submit\n image:${image}\n groupname:${groupname}`);
   };
 
   return (
@@ -90,8 +100,10 @@ const RegisterPage = () => {
           place='group name'
           callback={updateGroupname}
         />
-
         <SubmitButton text='CREATE' action={submit}></SubmitButton>
+        <Link to='/chat'>
+          <SubmitButton text='BACK'></SubmitButton>
+        </Link>
       </div>
     </LoginPageStyle>
   );
