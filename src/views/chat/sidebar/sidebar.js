@@ -11,7 +11,7 @@ import LogoutIcon from './images/logout-icon.svg';
 
 import { store, socket } from '../../../store/store.js'
 
-const Sidebar = ({profile}) => {
+const Sidebar = ({groups, profile}) => {
     const { state, dispatch } = useContext(store);
     const [yourGroups, setYourGroups] = useState([]);
     const [otherGroups, setOtherGroups] = useState([]);

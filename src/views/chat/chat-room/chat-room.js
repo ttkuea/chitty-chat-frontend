@@ -14,12 +14,27 @@ const fakeMessage = {
     timestamp: "2019-12-31T00:11:22Z"
 };
 
-const ChatRoom = ({groupName}) => {
+const ChatRoom = ({groups, groupName}) => {
     const [unread, setUnread] = useState([]);
     const [read, setRead] = useState([]);
 
+    useEffect(() => {
+        socket.emit('client_getChat');
+        socket.on('server_emitChat', (res) => {
+        });
+        socket.on()//TODO
+        return () => {
+            socket.off('server_emitChat');
+            socket.emit('client_exitGroup');
+        };
+    }, []);
+
     const handleSendMsg = (msg) => {
         socket.emit('client_sendMsg', {message: msg});
+    }
+
+    const updateChat = () => {
+        // socke
     }
 
     return (

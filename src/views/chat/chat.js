@@ -25,6 +25,17 @@ const fakeGroups = [
 
 const Chat = () => {
     const { state, dispatch } = useContext(store);
+    const [groups, setGroups] = useState([]);
+    useEffect(() => {
+        socket.emit('client_getGroupInfo');
+        socket.on('server_emitGroupInfo', (res) => {
+            setGroups(groups);
+        });
+        return () => {
+            socket.off('server_emitGroupInfo');
+            socket.emit('client_exitGroupInfo');
+        };
+    }, []);
 
     const getProfile = {
         name: state.loginUsername,
@@ -35,10 +46,10 @@ const Chat = () => {
         <div className="chat-page-layout">
             <div className="container">
                 <div className="sidebar">
-                    <Sidebar profile={getProfile}/>
+                    <Sidebar groups={groups} profile={getProfile}/>
                 </div>
                 <div className="main">
-                    <ChatRoom groupName={"foo"}/>
+                    <ChatRoom groups={groups} groupName={"foo"}/>
                 </div>
             </div>
         </div>
