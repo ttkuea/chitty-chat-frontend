@@ -6,8 +6,8 @@ import { clone } from 'ramda';
 const ENDPOINT = process.env.ENDPOINT || "http://localhost:3000";
 const socket = window.gsocket = socketIOClient(ENDPOINT); // tolerate reload 
 
-const initialState = {  loginUsername: 'testuser1', //TODO change to null
-    loginId: "5eaba24e1604a553c9c4e7e6" };
+const initialState = {  loginUsername: null, //TODO change to null
+    loginId: null };
 const store = createContext(initialState);
 const { Provider } = store;
 
@@ -30,7 +30,8 @@ const StateProvider = ( { children } ) => {
          	case 'login':
         		return {
           			...state,
-          			loginUsername: action.loginUsername,
+                      loginUsername: action.loginUsername,
+                      loginId: action.loginId
         		};
             default:
                 throw new Error();
