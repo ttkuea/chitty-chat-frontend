@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './chat-room.scss';
 import { Repeat } from '../chat';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ChatBubble from './components/chat-bubble';
 import UnreadMarker from './components/unread-marker';
+
+import { store, socket } from '../store/store.js';
 
 const fakeMessage = {
     message: "doge doge",
@@ -13,6 +15,13 @@ const fakeMessage = {
 };
 
 const ChatRoom = ({groupName}) => {
+    const [unread, setUnread] = useState([]);
+    const [read, setRead] = useState([]);
+
+    const handleSendMsg = (msg) => {
+        socket.emit('client_sendMsg', {message: msg});
+    }
+
     return (
         <div className="chat-room">
             <div className="title">
