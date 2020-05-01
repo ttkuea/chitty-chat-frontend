@@ -71,7 +71,7 @@ const RegisterPage = () => {
   };
 
   const submit = () => {
-    alert(`submit\n image:${image}\n groupname:${groupname}`);
+    alert(`submit\n  groupname:${groupname}`);
   };
 
   return (
@@ -80,8 +80,7 @@ const RegisterPage = () => {
         <div className='d-flex justify-content-center'>
           <h1>CREATE A NEW GROUP</h1>
         </div>
-
-        <ImageUploader callback={updateImage} />
+        {/**  <ImageUploader callback={updateImage} />*/}
 
         <InputField
           icon={'user'}

@@ -78,9 +78,7 @@ const RegisterPage = () => {
   };
 
   const submit = () => {
-    alert(
-      `submit\n image:${image}\n username:${username}\n password:${password}`
-    );
+    alert(`submit\n username:${username}\n password:${password}`);
   };
 
   return (
@@ -89,8 +87,7 @@ const RegisterPage = () => {
         <div className='d-flex justify-content-center'>
           <h1>REGISTRATION</h1>
         </div>
-
-        <ImageUploader callback={updateImage} />
+        {/**  <ImageUploader callback={updateImage} />*/}
 
         <InputField
           icon={'user'}
