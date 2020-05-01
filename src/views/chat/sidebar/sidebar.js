@@ -11,7 +11,7 @@ import LogoutIcon from './images/logout-icon.svg';
 
 import { store, socket } from '../../../store/store.js'
 
-const Sidebar = ({groups, profile, callback}) => {
+const Sidebar = ({groups, profile, callback, exitcallback}) => {
     const { state, dispatch } = useContext(store);
 
     const createGroupInfo = (groups) => {
@@ -39,7 +39,7 @@ const Sidebar = ({groups, profile, callback}) => {
                         yourGroups.map(g => {
 
                             return <GroupItem group={g} callback={() => handleEnterGroup(g.groupName)}
-                                action={<img src={LogoutIcon} className="icon" onClick={() => handleLeaveGroup(g.groupName)} />}
+                                action={<img src={LogoutIcon} className="icon" onClick={() => handleExitGroup(g.groupName)} />}
                             />;
                         })
                     }
@@ -70,9 +70,9 @@ const Sidebar = ({groups, profile, callback}) => {
         });
     }
 
-    const handleLeaveGroup = (groupName) => {
+    const handleExitGroup = (groupName) => {
 
-        socket.emit('client_leaveGroup', {
+        socket.emit('client_exitGroup', {
             groupName: groupName,
             username: state.loginUsername
         });

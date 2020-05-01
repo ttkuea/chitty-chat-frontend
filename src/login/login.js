@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { store } from '../store/store.js';
 import config from '../config';
 import request from 'superagent';
+import { Link } from 'react-router-dom';
 
 export const LoginPageStyle = styled.div`
   display: flex;
@@ -126,6 +127,7 @@ const LoginPage = () => {
         dispatch({
           type: 'login',
           loginUsername: username,
+          loginId: res.body.user._id
         });
         alert('login complete');
       })
@@ -137,19 +139,8 @@ const LoginPage = () => {
     login();
     // alert(`submit\n username:${username}\n password:${password}`);
   };
-  // template by flap edit it
-  const onLogin = async () => {
-    const username = 'testusername';
-
-    await dispatch({ type: 'login', payload: username });
-
-    // delete when not use this teach you how to get value
-    //check login
-    // const isLogin = !(state.loginUsername == null)
-  };
-
   return (
-    state.loginUsername == null && (
+    state.loginUsername == null ? (
       <LoginPageStyle>
         <div className='loginBox'>
           <div className='d-flex justify-content-center'>
@@ -182,6 +173,10 @@ const LoginPage = () => {
           </div>
         </div>
       </LoginPageStyle>
+    ) : (
+      <Link to="/chat">
+          <SubmitButton text='PROCEED' ></SubmitButton>
+      </Link>
     )
   );
 };
